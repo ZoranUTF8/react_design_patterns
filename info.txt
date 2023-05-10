@@ -1,0 +1,64 @@
+Container-Presentational Pattern
+In React one way to enforce separation of concerns is by using this pattern.
+By using it we can separate the VIEW from the application logic
+
+Example:
+Separate the app into two parts:
+
+Part1: Presentational Components: Components that care about how data is shown to the user. Rendering a list of dog images
+        is the app view. This type of components receive the data and simply display the data without modification to 
+        the same data. Presentational components are usually stateless meaning that they do not contain their own
+        react state UNLESS they need a state for UI purposes.
+
+        import React from "react";
+
+        // ? Presentational Component
+            const DisplayDogImages = ({ dogsImagesData }) => {
+                 return dogsImagesData.map((dog) => (
+                 <img src={dog.src} key={dog.id} alt="Dog image" />
+                ));
+                };
+
+            export default DisplayDogImages;
+
+
+Part2: Container Components: Components that care about what data is shown to the user. Fetching dog images data is
+        the application logic. The main function of the container components is to fetch the data and pass it on 
+        to the Presentational components that they render.
+
+    import React, { useState, useEffect } from "react";
+import DisplayDogImages from "./DisplayDogImages";
+
+const DisplayDogImagesContainer = () => {
+  const [dogsData, setDogsData] = useState([]);
+
+  useEffect(() => {
+    fetch("https://dog.ceo/api/breed/labrador/images/random/6")
+      .then((res) => res.json())
+      .then(({ message }) => {
+        console.log(`Message is:  ${message}`), setDogsData(message);
+      })
+      .catch((err) => {
+        console.log(`Error fetching images: ${err}`);
+      });
+  }, []);
+
+  if (dogsData.length < 1) return <h1>Loading data...</h1>;
+
+  return (
+    <div>
+      DisplayDogImagesContainer
+      <DisplayDogImages dogsImagesData={dogsData} />
+    </div>
+  );
+};
+
+export default DisplayDogImagesContainer;
+
+
+Using this approach helps us to separate the application logic and the view.
+
+
+With the introduction of react hooks we can create a custom hook that fetches the images and returen the array of the results.
+Using the hook makes it easy to separte the logic and view but it saves us the EXTRA LAYER that  we have with the Container
+component which was wrapping the Presentational component before.
