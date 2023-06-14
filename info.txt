@@ -62,3 +62,6 @@ Using this approach helps us to separate the application logic and the view.
 With the introduction of react hooks we can create a custom hook that fetches the images and returen the array of the results.
 Using the hook makes it easy to separte the logic and view but it saves us the EXTRA LAYER that  we have with the Container
 component which was wrapping the Presentational component before.
+
+OBSERVER
+Good for implementing a flexible and decoupled communication mechanism between components.
