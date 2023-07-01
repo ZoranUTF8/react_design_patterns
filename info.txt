@@ -65,3 +65,22 @@ component which was wrapping the Presentational component before.
 
 OBSERVER
 Good for implementing a flexible and decoupled communication mechanism between components.
+Use observables to notify subscribers when an event occurs
+
+An observable object, which can be observed by subscribers in order to notify them.
+Subscribers, which can subscribe to and get notified by the observable object.
+
+Decreased performance: Notifying all subscribers might take a significant amount of time if the observer handling becomes too complex, or if there are too many subscibers to notify.
+Separation of Concerns: The observer objects aren't tightly coupled to the observable object, and can be (de)coupled at any time. The observable object is responsible for monitoring the events, while the observers simply handle the received data.
+
+
+PROXY 
+Pros:
+Control: Proxies make it easy to add functionality when interacting with a certain object, such as validation, logging, formatting, notifications, debugging.
+Cons:
+Long handler execution: Executing handlers on every object interaction could lead to performance issues.
+
+Usage:
+Notifications, Logging, Validation, Formatting.
+
+
