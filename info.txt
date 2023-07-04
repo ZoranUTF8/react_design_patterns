@@ -84,3 +84,19 @@ Usage:
 Notifications, Logging, Validation, Formatting.
 
 
+Factory Pattern
+Use a factory function in order to create objects
+With the Factory Pattern, we can use a special function - the factory function - to create many of the same objects.
+Pro:
+The factory pattern is useful when we have to create multiple objects that share the same properties, without having to repeat the same code over and over. A factory function can easily return a custom object depending on the current environment, or user-specific configuration.
+Con:
+In JavaScript, the factory pattern isn't much more than a function that returns an object without using the new keyword.
+Not very memory efficient
+
+
+Prototype Pattern
+If we want to share properties among many objects of the same type, we can use the Prototype pattern.
+
+Memory efficient: The prototype chain allows us to access properties that aren't directly defined on the object itself, we can avoid duplication of methods and properties, thus reducing the amount of memory used.
+
+Readaibility: When a class has been extended many times, it can be difficult to know where certain properties come from.
