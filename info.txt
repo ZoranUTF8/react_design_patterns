@@ -100,3 +100,9 @@ If we want to share properties among many objects of the same type, we can use t
 Memory efficient: The prototype chain allows us to access properties that aren't directly defined on the object itself, we can avoid duplication of methods and properties, thus reducing the amount of memory used.
 
 Readaibility: When a class has been extended many times, it can be difficult to know where certain properties come from.
+
+Container/Presentational Pattern
+Enforce separation of concerns by separating the view from the application logic.
+
+Presentational Component, that cares about how data is shown to the user.
+Container Component, that cares about what data is shown to the user.
