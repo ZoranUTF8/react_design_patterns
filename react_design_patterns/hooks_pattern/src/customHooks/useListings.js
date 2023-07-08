@@ -1,18 +1,31 @@
-import React from "react";
+import { useEffect, useState } from "react";
 
 export default function useListings() {
-  const [data, setData] = React.useState(null);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [error, setError] = React.useState(null);
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  React.useEffect(() => {
-    fetch("https://house-lydiahallie.vercel.app/api/listings")
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res);
-        setData(res);
-      });
-  }, []); // Add an empty dependency array here
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://house-lydiahallie.vercel.app/api/listings"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const responseData = await response.json();
+        console.log(responseData);
+        setData(responseData.listings);
+        setIsLoading(false);
+      } catch (error) {
+        setError(error);
+        setIsLoading(false);
+      }
+    };
 
-  return data;
+    fetchData();
+  }, []);
+
+  return { data, isLoading, error };
 }
