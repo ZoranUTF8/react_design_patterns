@@ -106,3 +106,40 @@ Enforce separation of concerns by separating the view from the application logic
 
 Presentational Component, that cares about how data is shown to the user.
 Container Component, that cares about what data is shown to the user.
+
+
+Higher-Order Components
+Higher-Order Components (HOC) make it easy to pass logic to components by wrapping them.
+
+Separation of concerns: Using the Higher-Order Component pattern allows us to keep logic that we want to re-use all in one place. This reduces the risk of accidentally spreading bugs throughout the application by duplicating code over and over, potentially introducing new bugs each time
+
+Naming collisions: It can easily happen that the HOC overrides a prop of a component. Make sure that the HOC can handle accidental name collision, by either renaming the prop or merging the props.
+
+Readability: When using multiple composed HOCs that all pass props to the element that's wrapped within them, it can be difficult to figure out which HOC is responsible for which prop. This can hinder debugging and scaling an application easily.
+
+Render Props Pattern
+
+Pass JSX elements to components through props
+
+With the Render Props pattern, we pass components as props to other components. The components that are passed as props can in turn receive props from that component.
+Tradeoffs
+Reusability: Since render props can be different each time, we can make components that receive render props highly reusable for multiple usecases.
+
+Separation of concerns: We can separate our app's logic from rendering components through render props. The stateful component that receives a render prop can pass the data onto stateless components, which merely render the data.
+
+Solution to HOC problems: Since we explicitly pass props, we solve the HOC's implicit props issue. The props that should get passed down to the element, are all visible in the render prop's arguments list. We know exactly where certain props come from.
+
+Unnecessary with Hooks: Hooks changed the way we can add reusability and data sharing to components, which can replace the render props pattern in many cases.
+
+
+Hooks Pattern
+Use functions to reuse stateful logic among multiple components throughout the app
+
+Overview
+React Hooks are functions special types of functions that you can use in order to:
+
+Add state to a functional component
+Reuse stateful logic among multiple components throughout the app.
+Manage a component's lifecycle
+Besides built-in hooks, such as useState, useEffect, and useReducer, we can create custom hooks to easiliy share stateful logic across multiple components within the application.
+
