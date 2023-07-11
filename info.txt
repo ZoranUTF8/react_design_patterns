@@ -143,3 +143,146 @@ Reuse stateful logic among multiple components throughout the app.
 Manage a component's lifecycle
 Besides built-in hooks, such as useState, useEffect, and useReducer, we can create custom hooks to easiliy share stateful logic across multiple components within the application.
 
+
+
+
+performance improvements
+
+Static Import
+Import code that has been exported by another module
+
+Overview
+A statically imported module is a module that's imported with the default import keyword.
+
+import module1 from "./module1";
+import module2 from "./module2";
+import module3 from "./module3";
+In this case, module1, module2, and module3 are statically imported.
+
+When a module is statically imported, a bundler traverses all the modules, and bundles them into one file.
+
+Let's say we have four files:
+
+module1.js, which exports as single function module1
+module2.js, which statically imports the named export module1, and returns a single function module2
+module3.js, which statically imports the named export module2, and returns a single function module3
+index.js, which statically imports the named export module3 and logs this value
+
+When we bundle index.js, the bundler traverses the modules, and bundles them all together into one single file.
+
+Loading instant dependencies: Statically imported components are instantly available to the user
+
+Optimizations: Statically imported modules can be statically analyzed and tree-shaken.
+
+Large bundle size: When importing all modules, you might include code that won't be necessary
+
+Tradeoffs
+Faster initial load: Dynamically importing modules reduces the initial bundle size - allowing for a smaller initial load since the client doesn't have to download and execute as much, saving bandwidth.
+
+
+Dynamic Import
+Import parts of your code on demand
+
+Statically imported modules are all included in the final bundle of our app, even components that don't need to be rendered right away. Depending on the size of the components and the final bundle, this could lead to a worse initial loading experience, as the client has to download and parse the entire bundle.
+
+In many cases, we can defer the import of modules until they're actually needed, which results in smaller bundles.
+
+Import on Visibility
+Load non-critical components when they are visible in the viewport
+
+Overview
+We just saw how we can dynamically import components base on user interaction. However, we can also dynamically import components based on their visibility within the viewport.
+
+For example, if we wanted to show the listings on smaller viewports, not all listings are instantly visible to the user.
+
+Instead, we can lazy-load the listings, and only load them when they're visible in the viewport when the user scrolls down.
+
+Implementation
+One way to dynamically import components on interaction, is by using the Intersection Observer API. There's a React hook called react-intersection-observer that we can use to easily detect whether a component is visible in the viewport.
+
+Lazy-loading the Footer component would result in something like this:
+
+import { Suspense, lazy } from "react";
+import { useInView } from "react-intersection-observer";
+const Listing = lazy(() => import("./components/Listing"));
+
+function ListingCard(props) {
+  const { ref, inView } = useInView();
+
+  return (
+    <div ref={ref}>
+      <Suspense fallback={<div />}>{inView && <Listing />}</Suspense>
+    </div>
+  );
+}
+
+Tradeoffs
+Faster initial load: Dynamically importing modules reduces the initial bundle size - allowing for a smaller initial load since the client doesn't have to download and execute as much, saving bandwidth.
+
+Layout shift: A layout shift can occur if your fallback component and the component that eventually gets rendered differ a lot in size.
+
+3. Dynamic Import
+5. Route-based Splitting
+On This Page
+
+Overview
+Implementation
+Tradeoffs
+
+
+Layout shift: A layout shift can occur if your fallback component and the component that eventually gets rendered differ a lot in size.
+
+User experience: If you're lazy-loading a component that's needed for the initial render, it may unnecessarily result in longer loading times. Try to only lazy load components that aren't visible on the initial render.
+
+Import on Visibility
+Load non-critical components when they are visible in the viewport
+
+Overview
+We just saw how we can dynamically import components base on user interaction. However, we can also dynamically import components based on their visibility within the viewport.
+
+For example, if we wanted to show the listings on smaller viewports, not all listings are instantly visible to the user.
+
+Tradeoffs
+Faster initial load: Dynamically importing modules reduces the initial bundle size - allowing for a smaller initial load since the client doesn't have to download and execute as much, saving bandwidth.
+
+Layout shift: A layout shift can occur if your fallback component and the component that eventually gets rendered differ a lot in size.
+
+Route Based Splitting
+Dynamically load components based on the current route
+
+Overview
+If your application has multiple pages, we can use dynamic imports to only load the resources that are needed for the current route. Instead of the code for all the possible pages in the initial bundle, we can bundle-split based on routes. This approach allows us to defer loading the bundle until the user actually navigates to that page.
+
+Tradeoffs
+Faster initial load: Dynamically importing the pages reduces the initial bundle size - allowing for a smaller initial load since the client doesn't have to download and execute as much, saving bandwidth.
+
+Prefetch
+Fetch and cache resources that may be requested some time soon
+
+Overview
+The prefetch browser hint can be used to fetch resources that may be needed some time soon, but not immediately on the initial load. This can be the case on subsequent requests or page navigations that a user is likely to make.
+
+A prefetched resource is fetched when the browser is idle and has calculated that it's got enough bandwidth, after which it caches the prefetched resource. When the client actually needs the resource, it can easily get it from cache instead of having to make a request to the server.
+For example if we use route-based splitting, and we know that most users will navigate to the /about route, we can prefetch this route to get a faster navigation, resulting in a better UX.
+
+Loading time: The browser can quickly load and render the component from cache, instead of having to make a request to the server.
+
+Unnecessary: If the user ended up never navigating to the About route, we unnecessarily loaded the resource, which could negatively affect the app's performance and be costly to the user.
+
+Preload
+Inform the browser of critical resources before they are discovered
+
+Overview
+The preload browser hint can be used to fetch resources that are critical to the current navigation, such as fonts or images are instantly (not longer than 3 seconds after the initial load) visible on a landing page.
+
+With prefetch, the browser would only actually prefetch the resource if the conditions were good enough to not negatively affect the user experience. Unlike a prefetch, a preloaded resource gets fetched no matter what.
+
+For example, if we wanted to show the SearchFlyout instantly on the landing page, we can preload this resource to make sure the user won't have to wait too long before this resource is available.
+Loading time: The browser can quickly load and render the component from cache, instead of having to make a request to the server.
+
+Layout shift: Preloading styles, fonts and images can reduce layout shift.
+
+Performance: Since preloaded assets will get fetched no matter what, it's important to only preload resources that are actually instantly necessary. In most cases, it's worth either prefetching the resource, or if it's JavaScript, using a script with an async or defer attribute.
+
+  <link href="./script" rel="preload" />
+  <script rel="defer" src="./script" />
